@@ -1,7 +1,7 @@
 let timerIsWork = false;
 let timer;
 let defaultTimeSpan = { minutes: 25, seconds: 0 };
-let currentTimeSpan = {...defaultTimeSpan};
+let currentTimeSpan = { ...defaultTimeSpan };
 const btnStart = document.getElementById('btnStart');
 const btnReset = document.getElementById('btnReset');
 
@@ -12,7 +12,8 @@ function updateTimerDisplay() {
 function timerCallback() {
     if (timerIsWork) {
         if (currentTimeSpan.minutes === 0 && currentTimeSpan.seconds === 0) {
-            stopTimer();
+            showNotification();
+            resetTimer();
             return;
         }
 
@@ -40,7 +41,7 @@ function stopTimer() {
 }
 
 function resetTimer() {
-    currentTimeSpan = {...defaultTimeSpan};
+    currentTimeSpan = { ...defaultTimeSpan };
     stopTimer();
     updateTimerDisplay();
 }
@@ -63,3 +64,23 @@ btnReset.addEventListener("click", function () {
 document.addEventListener("DOMContentLoaded", function () {
     resetTimer();
 });
+
+function showNotification() {
+    if (window.Notification && Notification.permission !== "denied") {
+        Notification.requestPermission(function (status) {
+            // status содержит информацию о разрешении, которое пользователь дал для уведомлений
+            if (status === "granted") {
+                var notification = new Notification("Time for a break", {
+                    body: "ZenZone"
+                    // Другие опции уведомления: icon, image, badge и т.д.
+                });
+
+                // Действие при клике на уведомление
+                notification.onclick = function () {
+                    console.log("Уведомление кликнуто");
+                    // Добавьте здесь логику для обработки клика на уведомление
+                };
+            }
+        });
+    }
+}
