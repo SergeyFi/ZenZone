@@ -77,6 +77,11 @@
             border: none;
             font-size: 25px;
             box-shadow: 3px 4px rgba(0, 0, 0, 0.3);
+            transition: opacity 0.3s ease;
+        }
+
+        button:hover {
+            opacity: 0.7;
         }
     </style>
 </head>
@@ -87,7 +92,7 @@
         <div class="center-box">
             <p id="timerDisplay">25:00</p>
             <button id="btnStart">start</button>
-            <button id="btnRestart">restart</button>
+            <button id="btnRestart">reset</button>
         </div>
     </div>
 
