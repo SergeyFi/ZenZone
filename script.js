@@ -1,7 +1,7 @@
-let buttonText = "start";
 let timerIsWork = false;
 let timer;
-let currentTimeSpan = { minutes: 25, seconds: 0 };
+let defaultTimeSpan = { minutes: 25, seconds: 0 };
+let currentTimeSpan = {...defaultTimeSpan};
 const btnStart = document.getElementById('btnStart');
 const btnReset = document.getElementById('btnReset');
 
@@ -39,6 +39,12 @@ function stopTimer() {
     clearInterval(timer);
 }
 
+function resetTimer() {
+    currentTimeSpan = {...defaultTimeSpan};
+    stopTimer();
+    updateTimerDisplay();
+}
+
 btnStart.addEventListener("click", function () {
 
     if (!timerIsWork) {
@@ -46,13 +52,14 @@ btnStart.addEventListener("click", function () {
     } else {
         stopTimer();
     }
-    
+
     updateTimerDisplay();
 });
 
 btnReset.addEventListener("click", function () {
-    currentTimeSpan.minutes = 25;
-    currentTimeSpan.seconds = 0;
-    stopTimer();
-    updateTimerDisplay();
+    resetTimer();
+});
+
+document.addEventListener("DOMContentLoaded", function () {
+    resetTimer();
 });
