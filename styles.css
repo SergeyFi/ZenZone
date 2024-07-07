@@ -1,0 +1,77 @@
+@font-face {
+    font-family: 'Space Grotesk';
+    src: url('./SpaceGrotesk.woff2') format('woff2');
+}
+
+body,
+html {
+    font-family: 'Space Grotesk', sans-serif;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
+.container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+.background-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('https://studywithme.io/aesthetic-pomodoro-timer/3ce5f595f1a64dc1c1ee.jpg');
+    background-size: cover;
+    background-position: center;
+    opacity: 1.0;
+}
+
+.center-box {
+    position: absolute;
+    top: 45%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    color: white;
+}
+
+.center-box p {
+    font-size: 125px;
+    font-family: "Space Grotesk", sans-serif;
+    font-weight: bold;
+    font-variant-numeric: tabular-nums;
+    margin-bottom: 1vh;
+    text-align: center;
+    justify-content: center;
+    user-select: none;
+}
+
+button {
+    background-color: white;
+    color: black;
+    font-family: "Space Grotesk", sans-serif;
+    font-weight: bold;
+    border-radius: 25px;
+    padding: 10px 20px;
+    height: 45px;
+    line-height: 40px;
+    min-width: 120px;
+    text-align: center;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    font-size: 25px;
+    box-shadow: 3px 4px rgba(0, 0, 0, 0.3);
+    transition: opacity 0.3s ease;
+}
+
+button:hover {
+    opacity: 0.7;
+}
