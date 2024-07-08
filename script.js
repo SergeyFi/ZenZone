@@ -84,3 +84,19 @@ function showNotification() {
         });
     }
 }
+
+function decreaseTime() {
+    if (defaultTimeSpan.minutes > 1) {
+        defaultTimeSpan.minutes -= 1;
+    }
+
+    resetTimer();
+}
+
+function increaseTime() {
+    if (defaultTimeSpan.minutes < 99) {
+        defaultTimeSpan.minutes += 1;
+    }
+
+    resetTimer();
+}
