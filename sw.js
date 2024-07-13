@@ -1,7 +1,7 @@
-let timerIsStart = false;
-let initialTime;
-let scheduledTime;
-let timer;
+importScripts('./timer.js');
+
+let defaultTime = 25;
+const timer = new Timer(defaultTime, 1000, onUpdate, onStart, onPause, onEnd);
 
 self.addEventListener('install', function (event) {
   event.waitUntil(
@@ -22,74 +22,59 @@ self.addEventListener('fetch', function (event) {
   );
 });
 
-self.addEventListener('message', event => {
-
-  if (event.data.action === 'startTimer') {
-
-    if (!timerIsStart) {
-
-      startTimer(event);
+self.addEventListener('message', function(event) {
+  const action = event.data.action;
+  if (action === 'start') {
+    if (timer.start()) {
+      console.log('Timer is start');
+    } else {
+      timer.pause();
+      console.log('Timer is paused');
     }
-    return;
+  } else if (action === 'reset') {
+    timer.reset();
+  } else if (action === 'increase') {
+    defaultTime = Math.min(defaultTime + 1, 99);
+    timer.reset(defaultTime);
+  } else if (action === 'decrease') {
+    defaultTime = Math.max(defaultTime - 1, 1);
+    timer.reset(defaultTime);
+  } else if (action === 'update') {
+    onUpdate();
+    if (timer.isWork()) {
+      onStart();
+    } else {
+      onPause();
+    }
   }
 
-  if (event.data.action === 'visible') {
-
-    if (timerIsWork) {
-      updateTimeOnClient();
-    }
-    return;
-  }
-
-  if (event.data.action === 'resetTimer') {
-
-    if (timerIsStart) {
-
-      stopTimer();
-    }
-
-    return;
-  }
 });
 
-function startTimer(event) {
-
-  timerIsWork = true;
-  initialTime = Date.now();
-  scheduledTime = initialTime + event.data.value * 1000;
-  timer = setInterval(timerCallback, 1000 * 60);
-  console.log('Timer is start', event.data.value);
+function onUpdate() {
+  toFront({action: 'timeUpdate', value: timer.getTime()});
 }
 
-function stopTimer() {
-
-  timerIsWork = false;
-  clearInterval(timer);
-  console.log('Timer is stop');
+function onStart() {
+  toFront({action: 'start'});
 }
 
-function timerCallback() {
-  if (Date.now() >= scheduledTime) {
-    showNotification();
-    stopTimer();
-  }
+function onPause() {
+  toFront({action: 'pause'});
 }
 
-function updateTimeOnClient() {
+function onEnd() {
+  showNotification();
+}
 
-  self.clients.matchAll().then(clients => {
-    clients.forEach(client => {
-        // Отправляем сообщение клиенту
-        client.postMessage({
-            action: 'updateTime',
-            value: (scheduledTime - Date.now()) / 1000
-        });
+function toFront(message) {
+  clients.matchAll().then(function(clients) {
+    clients.forEach(function(client) {
+      client.postMessage(message);
     });
   });
 }
 
 function showNotification() {
-
   self.registration.showNotification('Time for a break', {
     body: 'ZenZone'
 });
