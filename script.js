@@ -21,7 +21,7 @@ btnTimeDecrease.addEventListener('click', function () {
 });
 
 document.addEventListener('DOMContentLoaded', function () {
-    toBack('update');
+    //toBack('update');
 });
 
 function updateTimerDisplay(time) {
