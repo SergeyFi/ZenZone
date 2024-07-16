@@ -4,9 +4,9 @@ const btnTimeIncrease = document.getElementById('btnTimeIncrease');
 const btnTimeDecrease = document.getElementById('btnTimeDecrease');
 const states = {none: 'none', work: 'work', pause: 'pause'};
 const props = {startTime: 'startTime', targetTime: 'targetTime', pauseTime: 'pauseTime', state: 'state', defaultTime: 'defaultTime'};
-let timer;
 const sourceTime = 25 * 60 * 1000;
 const timeLimits = {min: 1 * 60 * 1000, max: 99 * 60 * 1000};
+let timer;
 
 btnStart.addEventListener('click', function () {
     let state = getState();
@@ -33,7 +33,7 @@ btnTimeDecrease.addEventListener('click', function () {
 
 document.addEventListener('DOMContentLoaded', function() {
     setupDefaultProperties();
-    updateTimerDisplay(getDefaultTime());
+    updateTimerDisplay(getCurrentTime());
 });
 
 function onStart() {
@@ -41,10 +41,11 @@ function onStart() {
     localStorage.setItem(props.startTime, Date.now());
     localStorage.setItem(props.targetTime, getDefaultTime() + Date.now());
     timer = setInterval(onUpdate, 1000);
+    btnStart.innerText = 'pause';
 }
 
 function onUpdate() {
-    let currentTime = (parseInt(localStorage.getItem(props.targetTime)) - Date.now());
+    let currentTime = getCurrentTime();
     if (currentTime < 500) {
         currentTime = 0;
         clearInterval(timer);
@@ -56,6 +57,7 @@ function onPause() {
     setState(states.pause);
     clearInterval(timer);
     localStorage.setItem(props.pauseTime, Date.now());
+    btnStart.innerText = 'start';
 }
 
 function onResume() {
@@ -64,6 +66,7 @@ function onResume() {
     let targetTime = parseInt(localStorage.getItem(props.targetTime));
     localStorage.setItem(props.targetTime, targetTime + Date.now() - pauseTime);
     timer = setInterval(onUpdate, 1000);
+    btnStart.innerText = 'pause';
 }
 
 function reset() {
@@ -113,5 +116,18 @@ function shiftDefaultTime(value) {
     if (newDefaultTime >= timeLimits.min && newDefaultTime <= timeLimits.max) {
         localStorage.setItem(props.defaultTime, newDefaultTime);
         updateTimerDisplay(getDefaultTime());
+    }
+}
+
+function getCurrentTime() {
+    let state = getState();
+    if (state == states.none) {
+        return getDefaultTime();
+    } else if (state == states.work) {
+        return (parseInt(localStorage.getItem(props.targetTime)) - Date.now());
+    } else if (state == states.pause) {
+        let pauseTime = parseInt(localStorage.getItem(props.pauseTime));
+        let targetTime = parseInt(localStorage.getItem(props.targetTime));
+        return targetTime - pauseTime;
     }
 }
