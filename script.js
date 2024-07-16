@@ -1,5 +1,3 @@
-import * as Tk from "./dataHolder.js";
-
 const btnStart = document.getElementById('btnStart');
 const btnReset = document.getElementById('btnReset');
 const btnTimeIncrease = document.getElementById('btnTimeIncrease');
