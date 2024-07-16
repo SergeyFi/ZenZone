@@ -1,102 +1,119 @@
-let timerIsWork = false;
-let timer;
-let defaultTimeSpan = { minutes: 25, seconds: 0 };
-let currentTimeSpan = { ...defaultTimeSpan };
+import * as Tk from "./dataHolder.js";
+
 const btnStart = document.getElementById('btnStart');
 const btnReset = document.getElementById('btnReset');
+const btnTimeIncrease = document.getElementById('btnTimeIncrease');
+const btnTimeDecrease = document.getElementById('btnTimeDecrease');
+const states = {none: 'none', work: 'work', pause: 'pause'};
+const props = {startTime: 'startTime', targetTime: 'targetTime', pauseTime: 'pauseTime', state: 'state', defaultTime: 'defaultTime'};
+let timer;
+const sourceTime = 25 * 60 * 1000;
+const timeLimits = {min: 1 * 60 * 1000, max: 99 * 60 * 1000};
 
-function updateTimerDisplay() {
-    document.getElementById("timerDisplay").innerText = `${currentTimeSpan.minutes.toString().padStart(2, '0')}:${currentTimeSpan.seconds.toString().padStart(2, '0')}`;
-}
-
-function timerCallback() {
-    if (timerIsWork) {
-        if (currentTimeSpan.minutes === 0 && currentTimeSpan.seconds === 0) {
-            showNotification();
-            resetTimer();
-            return;
-        }
-
-        if (currentTimeSpan.seconds === 0) {
-            currentTimeSpan.minutes--;
-            currentTimeSpan.seconds = 59;
-        } else {
-            currentTimeSpan.seconds--;
-        }
-
-        updateTimerDisplay();
+btnStart.addEventListener('click', function () {
+    let state = getState();
+    if (state == states.none) {
+        onStart();
+    } else if (state == states.work) {
+        onPause();
+    } else if (state == states.pause) {
+        onResume();
     }
+});
+
+btnReset.addEventListener('click', function () {
+    reset();
+});
+
+btnTimeIncrease.addEventListener('click', function () {
+    shiftDefaultTime(1000 * 60);
+});
+
+btnTimeDecrease.addEventListener('click', function () {
+    shiftDefaultTime(-1000 * 60);
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+    setupDefaultProperties();
+    updateTimerDisplay(getDefaultTime());
+});
+
+function onStart() {
+    setState(states.work);
+    localStorage.setItem(props.startTime, Date.now());
+    localStorage.setItem(props.targetTime, getDefaultTime() + Date.now());
+    timer = setInterval(onUpdate, 1000);
 }
 
-function startTimer() {
-    btnStart.innerText = "pause";
-    timerIsWork = true;
-    timer = setInterval(timerCallback, 1000);
+function onUpdate() {
+    let currentTime = (parseInt(localStorage.getItem(props.targetTime)) - Date.now());
+    if (currentTime < 500) {
+        currentTime = 0;
+        clearInterval(timer);
+    }
+    updateTimerDisplay(currentTime);
 }
 
-function stopTimer() {
-    btnStart.innerText = "start";
-    timerIsWork = false;
+function onPause() {
+    setState(states.pause);
     clearInterval(timer);
+    localStorage.setItem(props.pauseTime, Date.now());
 }
 
-function resetTimer() {
-    currentTimeSpan = { ...defaultTimeSpan };
-    stopTimer();
-    updateTimerDisplay();
+function onResume() {
+    setState(states.work);
+    let pauseTime = parseInt(localStorage.getItem(props.pauseTime));
+    let targetTime = parseInt(localStorage.getItem(props.targetTime));
+    localStorage.setItem(props.targetTime, targetTime + Date.now() - pauseTime);
+    timer = setInterval(onUpdate, 1000);
 }
 
-btnStart.addEventListener("click", function () {
+function reset() {
+    if (timer) clearInterval(timer);
+    setState(states.none);
+    localStorage.removeItem(props.startTime);
+    localStorage.removeItem(props.targetTime);
+    localStorage.removeItem(props.pauseTime);
+    updateTimerDisplay(getDefaultTime());
+}
 
-    if (!timerIsWork) {
-        startTimer();
+function setState(state) {
+    localStorage.setItem(props.state, state);
+}
+
+function getState() {
+    let state = localStorage.getItem(props.state);
+    if (state) {
+        return state;
     } else {
-        stopTimer();
-    }
-
-    updateTimerDisplay();
-});
-
-btnReset.addEventListener("click", function () {
-    resetTimer();
-});
-
-document.addEventListener("DOMContentLoaded", function () {
-    resetTimer();
-});
-
-function showNotification() {
-    if (window.Notification && Notification.permission !== "denied") {
-        Notification.requestPermission(function (status) {
-            // status содержит информацию о разрешении, которое пользователь дал для уведомлений
-            if (status === "granted") {
-                var notification = new Notification("Time for a break", {
-                    body: "ZenZone"
-                    // Другие опции уведомления: icon, image, badge и т.д.
-                });
-
-                // Действие при клике на уведомление
-                notification.onclick = function () {
-                    console.log("Уведомление кликнуто");
-                    // Добавьте здесь логику для обработки клика на уведомление
-                };
-            }
-        });
+        return states.none;
     }
 }
 
-function decreaseTime() {
-    if (defaultTimeSpan.minutes > 1) {
-        defaultTimeSpan.minutes -= 1;
-    }
-
-    resetTimer();
+function updateTimerDisplay(time) {
+    document.getElementById("timerDisplay").innerText = `${(Math.floor(time/1000/60)).toString().padStart(2, '0')}:${(Math.ceil(time/1000)%60).toString().padStart(2, '0')}`;
 }
 
-function increaseTime() {
-    if (defaultTimeSpan.minutes < 99) {
-        defaultTimeSpan.minutes += 1;
-    }
+function setupDefaultProperties() {
+    createUnsetProperty(props.defaultTime, sourceTime);
+    createUnsetProperty(props.state, states.none);
+}
 
-    resetTimer();
+function createUnsetProperty(name, value) {
+    let property = localStorage.getItem(name);
+    if (!property) {
+        localStorage.setItem(name, value);
+    }
+}
+
+function getDefaultTime() {
+    return parseInt(localStorage.getItem(props.defaultTime));
+}
+
+function shiftDefaultTime(value) {
+    let newDefaultTime = getDefaultTime() + value;
+    if (newDefaultTime >= timeLimits.min && newDefaultTime <= timeLimits.max) {
+        localStorage.setItem(props.defaultTime, newDefaultTime);
+        updateTimerDisplay(getDefaultTime());
+    }
 }
