@@ -27,7 +27,7 @@ self.addEventListener('activate', function(event) {
     if (event.data.action == 'notify') {
       scheduleNotification(event.data.value);
     } else if (event.data.action == 'cancelNotify') {
-      if (notifyTimer) {
+      if (notifyTimer != undefined) {
         this.clearTimeout(notifyTimer);
         log('Notify has canceled');
       }
