@@ -34,6 +34,7 @@ btnTimeDecrease.addEventListener('click', function () {
 document.addEventListener('DOMContentLoaded', function() {
     setupDefaultProperties();
     updateTimerDisplay(getCurrentTime());
+    tryGetNotifyPermission();
 });
 
 function onStart() {
@@ -42,15 +43,15 @@ function onStart() {
     localStorage.setItem(props.targetTime, getDefaultTime() + Date.now());
     timer = setInterval(onUpdate, 1000);
     btnStart.innerText = 'pause';
+    requestNotify(getCurrentTime());
 }
 
 function onUpdate() {
     let currentTime = getCurrentTime();
     if (currentTime < 500) {
-        currentTime = 0;
-        clearInterval(timer);
+        reset();
     }
-    updateTimerDisplay(currentTime);
+    updateTimerDisplay(getCurrentTime());
 }
 
 function onPause() {
@@ -58,6 +59,7 @@ function onPause() {
     clearInterval(timer);
     localStorage.setItem(props.pauseTime, Date.now());
     btnStart.innerText = 'start';
+    requestCancelNotify();
 }
 
 function onResume() {
@@ -67,6 +69,7 @@ function onResume() {
     localStorage.setItem(props.targetTime, targetTime + Date.now() - pauseTime);
     timer = setInterval(onUpdate, 1000);
     btnStart.innerText = 'pause';
+    requestNotify(getCurrentTime());
 }
 
 function reset() {
@@ -75,7 +78,9 @@ function reset() {
     localStorage.removeItem(props.startTime);
     localStorage.removeItem(props.targetTime);
     localStorage.removeItem(props.pauseTime);
-    updateTimerDisplay(getDefaultTime());
+    updateTimerDisplay(getCurrentTime());
+    requestCancelNotify();
+    btnStart.innerText = 'start';
 }
 
 function setState(state) {
@@ -130,4 +135,18 @@ function getCurrentTime() {
         let targetTime = parseInt(localStorage.getItem(props.targetTime));
         return targetTime - pauseTime;
     }
+}
+
+function tryGetNotifyPermission() {
+    if (Notification.permission === 'default') {
+        Notification.requestPermission();
+    }
+}
+
+function requestNotify(time) {
+    navigator.serviceWorker.controller.postMessage({ action: 'notify', value: time });
+}
+
+function requestCancelNotify() {
+    navigator.serviceWorker.controller.postMessage({ action: 'cancelNotify' });
 }
