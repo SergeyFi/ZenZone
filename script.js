@@ -48,7 +48,7 @@ function onStart() {
 
 function onUpdate() {
     let currentTime = getCurrentTime();
-    if (currentTime < 500) {
+    if (currentTime <= 0) {
         reset();
     }
     updateTimerDisplay(getCurrentTime());
