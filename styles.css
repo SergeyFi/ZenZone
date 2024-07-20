@@ -18,27 +18,47 @@ body {
 
 #timerContainer {
     display: flex; /* превращаем контейнер в flex-контейнер */
-    justify-content: center;
     align-items: center;
 }
 
-#timeWork, #timerDisplay, #timeDay {
+#timeWork, #timeDayContainer, #timerDisplay {
     color: white;
     font-family: "Space Grotesk", sans-serif;
     font-weight: bold;
     font-variant-numeric: tabular-nums;
     user-select: none;
     font-size: 70px;
+    display: flex;
+    align-items: center;
 }
 
-#timeWork, #timeDay {
+#timeWork {
+    margin-right: 20px; /* увеличьте или уменьшите значение маржины по вашему усмотрению */
+    margin-left: 55px;
+}
+
+#timeDayContainer {
+    display: flex;
+    align-items: center;
+    margin-left: 525px; /* увеличьте или уменьшите значение маржины по вашему усмотрению */
+}
+
+#timeDay, #timeWork, #timeDaySeconds {
     opacity: 0.7;
-    margin: 0px 90px;
+}
+
+#timeDaySeconds {
+    margin-left: 8px; /* увеличьте или уменьшите значение маржины по вашему усмотрению */
+    font-size: 35px;
+    margin-top: 20px;
 }
 
 #timerDisplay {
     font-size: 125px;
     margin: 10px;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
 }
 
 #buttonContainer {
@@ -71,6 +91,10 @@ body {
     border: none;
 }
 
+#btnReset, #btnTimeIncrease, #btnTimeDecrease, #btnStart {
+    margin-top: 25px;
+}
+
 #btn1, #btn2, #btn3 {
     height: 35px;
     width: 96px;
@@ -87,7 +111,7 @@ button {
 }
 
 #buttonContainerTop button {
-    margin: 0 7px;
+    margin: 25px 7px;
 }
 
 button:active {
