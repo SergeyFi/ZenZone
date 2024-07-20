@@ -3,98 +3,105 @@
     src: url('./SpaceGrotesk.woff2') format('woff2');
 }
 
-body,
-html {
-    font-family: 'Space Grotesk', sans-serif;
+body {
     margin: 0;
     padding: 0;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
     overflow: hidden;
-}
-
-.container {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-}
-
-.background-image {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
     background-image: url('https://studywithme.io/aesthetic-pomodoro-timer/3ce5f595f1a64dc1c1ee.jpg');
     background-size: cover;
-    background-position: center;
-    opacity: 1.0;
 }
 
-.center-box {
-    position: absolute;
-    top: 45%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    text-align: center;
+#timerContainer {
+    display: flex; /* превращаем контейнер в flex-контейнер */
+    justify-content: center;
+    align-items: center;
+}
+
+#timeWork, #timerDisplay, #timeDay {
     color: white;
-}
-
-.center-box p {
-    font-size: 125px;
     font-family: "Space Grotesk", sans-serif;
     font-weight: bold;
     font-variant-numeric: tabular-nums;
-    margin-bottom: 1vh;
-    text-align: center;
-    justify-content: center;
     user-select: none;
+    font-size: 70px;
 }
 
-button {
-    background-color: white;
-    color: black;
+#timeWork, #timeDay {
+    opacity: 0.7;
+    margin: 0px 90px;
+}
+
+#timerDisplay {
+    font-size: 125px;
+    margin: 10px;
+}
+
+#buttonContainer {
+    display: flex;
+    justify-content: center;
+}
+
+#btnReset, #btnTimeIncrease, #btnTimeDecrease {
+    border: none;
+    background-color: transparent; /* делаем фон прозрачным */
+}
+#buttonContainer img {
+    width: 40px; /* задаем ширину изображения */
+    height: 40px; /* задаем высоту изображения */
+    background-color: transparent; /* делаем фон прозрачным */
+}
+
+#btnStart {
+    margin: 0 10px;
+}
+
+#btn1, #btn2, #btn3, #btnStart {
+    border-radius: 25px;
+    height: 40px;
+    width: 110px;
+    outline: none;
     font-family: "Space Grotesk", sans-serif;
     font-weight: bold;
-    border-radius: 25px;
-    height: 45px;
-    line-height: 40px;
-    min-width: 120px;
-    text-align: center;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    border: none;
     font-size: 25px;
-    transition: opacity 0.3s ease;
-    cursor: pointer;
-    margin-right: 10px;
+    border: none;
+}
+
+#btn1, #btn2, #btn3 {
+    height: 35px;
+    width: 96px;
+    font-size: 20px;
 }
 
 button:hover {
     opacity: 0.7;
 }
 
-#btnReset {
-    background-image: url('icon_refresh.svg');
+button {
+    transition: opacity 0.3s ease;
+    cursor: pointer;
 }
 
-.button-icon {
-    background-color: initial;
-    background-size: 40px 40px;
-    background-repeat: no-repeat;
-    padding: 17px;
-    min-width: initial;
-    border-radius: initial;
-    width: 40px;
-    height: 45px;
+#buttonContainerTop button {
+    margin: 0 7px;
 }
 
-#btnTimeIncrease {
-    background-image: url('icon_sign_plus.svg');
+button:active {
+    background-color: #d0d0d0;
 }
 
-#btnTimeDecrease {
-    background-image: url('icon_sign_minus.svg');
+button:active img {
+    filter: brightness(0.9);
+}
+
+#btnReset img {
+    transition: transform 0.3s ease;
+}
+
+#btnReset:active img {
+    transform: rotate(360deg);
 }

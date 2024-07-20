@@ -9,17 +9,25 @@
 </head>
 
 <body>
-    <div class="container">
-        <div class="background-image"></div>
-        <div class="center-box">
-            <p id="timerDisplay">00:00</p>
-            <button id="btnStart">start</button>
-            <button class = "button-icon" id="btnReset"></button>
-            <button class = "button-icon" id="btnTimeIncrease""></button>
-            <button class = "button-icon" id="btnTimeDecrease""></button>
-        </div>
+    <div id="buttonContainerTop">
+        <button id="btn1">work</button>
+        <button id="btn2">break</button>
+        <button id="btn3">chill</button>
+    </div>
+    <div id="timerContainer">
+        <div id="timeWork">00:00</div>
+        <div id="timerDisplay">00:00</div>
+        <div id="timeDay">00:00</div>
+    </div>
+    <div id="buttonContainer">
+        <button id="btnStart">start</button>
+        <button id="btnReset"><img src="icon_refresh.svg" alt="Reset"></button>
+        <button id="btnTimeIncrease"><img src='icon_sign_plus.svg' alt="Increase Time"></button>
+        <button id="btnTimeDecrease"><img src="icon_sign_minus.svg" alt="Decrease Time"></button>
     </div>
     <script src="serviceWorkerRegistration.js"></script>
+    <script type="module" src="dayliTime.js"></script>
+    <script type="module" src="day.js"></script>
     <script type="module" src="script.js"></script>
 </body>
 
