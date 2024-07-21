@@ -2,6 +2,7 @@ import { DayliTime } from "./dayliTime.js";
 
 const timeDayText = document.getElementById("timeDay");
 const timeDaySecondsText = document.getElementById("timeDaySeconds");
+const timeWorkText = document.getElementById("timeWork");
 let dt = new DayliTime(12, 24, 6);
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -9,19 +10,17 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function update() {
-    console.log(dt.getDayTime()/60/60/1000);
-    setDayTimerText(dt.getDayTime());
+    setDayTimerText();
+    setTimeWorkText();
 }
 
-function setDayTimerText(millis) {
-    var seconds = Math.floor((millis / 1000) % 60);
-    var minutes = Math.floor((millis / (1000 * 60)) % 60);
-    var hours = Math.floor((millis / (1000 * 60 * 60)));
-
-    seconds = String(seconds).padStart(2, '0');
-    minutes = String(minutes).padStart(2, '0');
-    hours = String(hours).padStart(2, '0');
-
-    timeDayText.innerText = hours + ':' + minutes;
-    timeDaySecondsText.innerText = seconds;
+function setDayTimerText() {
+    let timeWorkStr = millisToString(dt.getDayTime());
+    timeDayText.innerText = timeWorkStr.hours + ":" + timeWorkStr.minutes;
+    timeDaySecondsText.innerText = timeWorkStr.seconds;
   }
+
+  function setTimeWorkText() {
+    let timeWorkStr = millisToString(dt.getWorkTime());
+    timeWorkText.innerText = timeWorkStr.hours + ":" + timeWorkStr.minutes;
+}
