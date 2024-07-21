@@ -3,7 +3,7 @@ const btnReset = document.getElementById('btnReset');
 const btnTimeIncrease = document.getElementById('btnTimeIncrease');
 const btnTimeDecrease = document.getElementById('btnTimeDecrease');
 const states = {none: 'none', work: 'work', pause: 'pause'};
-const props = {startTime: 'startTime', targetTime: 'targetTime', pauseTime: 'pauseTime', state: 'timerState', defaultTime: 'defaultTime'};
+const props = {startTime: 'startTime', endTime: 'endTime', pauseTime: 'pauseTime', state: 'timerState', defaultTime: 'defaultTime'};
 const sourceTime = 25 * 60 * 1000;
 const timeLimits = {min: 1 * 60 * 1000, max: 99 * 60 * 1000};
 let timer;
@@ -40,7 +40,7 @@ document.addEventListener('DOMContentLoaded', function() {
 function onStart() {
     setState(states.work);
     localStorage.setItem(props.startTime, Date.now());
-    localStorage.setItem(props.targetTime, getDefaultTime() + Date.now());
+    localStorage.setItem(props.endTime, getDefaultTime() + Date.now());
     timer = setInterval(onUpdate, 1000);
     btnStart.innerText = 'pause';
     requestNotify(getCurrentTime());
@@ -65,8 +65,8 @@ function onPause() {
 function onResume() {
     setState(states.work);
     let pauseTime = parseInt(localStorage.getItem(props.pauseTime));
-    let targetTime = parseInt(localStorage.getItem(props.targetTime));
-    localStorage.setItem(props.targetTime, targetTime + Date.now() - pauseTime);
+    let targetTime = parseInt(localStorage.getItem(props.endTime));
+    localStorage.setItem(props.endTime, targetTime + Date.now() - pauseTime);
     timer = setInterval(onUpdate, 1000);
     btnStart.innerText = 'pause';
     requestNotify(getCurrentTime());
@@ -76,7 +76,7 @@ function reset() {
     if (timer) clearInterval(timer);
     setState(states.none);
     localStorage.removeItem(props.startTime);
-    localStorage.removeItem(props.targetTime);
+    localStorage.removeItem(props.endTime);
     localStorage.removeItem(props.pauseTime);
     updateTimerDisplay(getCurrentTime());
     requestCancelNotify();
@@ -101,7 +101,11 @@ function updateTimerDisplay(time) {
 }
 
 function setupDefaultProperties() {
-    createUnsetProperty(props.defaultTime, sourceTime);
+    const appStates = Object.keys(app.states);
+    appStates.forEach(function(appState) {
+        createUnsetProperty(props.defaultTime + appState, sourceTime);
+    });
+
     createUnsetProperty(props.state, states.none);
 }
 
@@ -113,13 +117,13 @@ function createUnsetProperty(name, value) {
 }
 
 function getDefaultTime() {
-    return parseInt(localStorage.getItem(props.defaultTime));
+    return parseInt(localStorage.getItem(props.defaultTime+app.manager.getState()));
 }
 
 function shiftDefaultTime(value) {
     let newDefaultTime = getDefaultTime() + value;
     if (newDefaultTime >= timeLimits.min && newDefaultTime <= timeLimits.max) {
-        localStorage.setItem(props.defaultTime, newDefaultTime);
+        localStorage.setItem(props.defaultTime+app.manager.getState(), newDefaultTime);
         updateTimerDisplay(getDefaultTime());
     }
 }
@@ -129,10 +133,10 @@ function getCurrentTime() {
     if (state == states.none) {
         return getDefaultTime();
     } else if (state == states.work) {
-        return (parseInt(localStorage.getItem(props.targetTime)) - Date.now());
+        return (parseInt(localStorage.getItem(props.endTime)) - Date.now());
     } else if (state == states.pause) {
         let pauseTime = parseInt(localStorage.getItem(props.pauseTime));
-        let targetTime = parseInt(localStorage.getItem(props.targetTime));
+        let targetTime = parseInt(localStorage.getItem(props.endTime));
         return targetTime - pauseTime;
     }
 }
@@ -150,3 +154,7 @@ function requestNotify(time) {
 function requestCancelNotify() {
     navigator.serviceWorker.controller.postMessage({ action: 'cancelNotify' });
 }
+
+app.manager.addEventListener('state', function (data) {
+    updateTimerDisplay(getCurrentTime());
+});

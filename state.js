@@ -6,6 +6,7 @@ const app = Object.freeze({
     },
     manager: new class {
         constructor() {
+            this._observers = [];
             this._state = this.getState();
             if (!this._state) this.setState('work');
         }
@@ -15,6 +16,14 @@ const app = Object.freeze({
         setState(state) {
             this._state = state;
             localStorage.setItem('appState', state);
+            this._observers.forEach(function(observer) {
+                observer({state: state});
+            });
+        }
+        addEventListener(type, callback) {
+            if (type == 'state') {
+                this._observers.push(callback);
+            }
         }
     }
 });
