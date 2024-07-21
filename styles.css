@@ -88,7 +88,6 @@ body {
     font-family: "Space Grotesk", sans-serif;
     font-weight: bold;
     font-size: 25px;
-    border: none;
 }
 
 #btnReset, #btnTimeIncrease, #btnTimeDecrease, #btnStart {
@@ -129,3 +128,15 @@ button:active img {
 #btnReset:active img {
     transform: rotate(360deg);
 }
+
+button.select {
+    border: none;
+    color: black;
+}
+
+button.unselect {
+    background-color: rgba(255, 255, 255, 0.119);
+    border: 1px solid white;
+    color: white;
+}
+

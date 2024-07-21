@@ -6,13 +6,13 @@ const app = Object.freeze({
     },
     manager: new class {
         constructor() {
-            this._state = 'work';
+            this._state = this.getState();
+            if (!this._state) this.setState('work');
         }
         getState() {
-            return this._state;
+            return localStorage.getItem('appState');
         }
         setState(state) {
-            console.log('State: ' + state);
             this._state = state;
             localStorage.setItem('appState', state);
         }
