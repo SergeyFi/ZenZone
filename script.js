@@ -3,7 +3,7 @@ const btnReset = document.getElementById('btnReset');
 const btnTimeIncrease = document.getElementById('btnTimeIncrease');
 const btnTimeDecrease = document.getElementById('btnTimeDecrease');
 const states = {none: 'none', work: 'work', pause: 'pause'};
-const props = {startTime: 'startTime', targetTime: 'targetTime', pauseTime: 'pauseTime', state: 'state', defaultTime: 'defaultTime'};
+const props = {startTime: 'startTime', targetTime: 'targetTime', pauseTime: 'pauseTime', state: 'timerState', defaultTime: 'defaultTime'};
 const sourceTime = 25 * 60 * 1000;
 const timeLimits = {min: 1 * 60 * 1000, max: 99 * 60 * 1000};
 let timer;

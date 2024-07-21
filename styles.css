@@ -80,7 +80,7 @@ body {
     margin: 0 10px;
 }
 
-#btn1, #btn2, #btn3, #btnStart {
+#btnWork, #btnBreak, #btnChill, #btnStart {
     border-radius: 25px;
     height: 45px;
     width: 115px;
@@ -95,7 +95,7 @@ body {
     margin-top: 45px;
 }
 
-#btn1, #btn2, #btn3 {
+#btnWork, #btnBreak, #btnChill {
     height: 35px;
     width: 96px;
     font-size: 20px;
