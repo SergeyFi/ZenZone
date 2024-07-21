@@ -92,7 +92,7 @@ body {
 }
 
 #btnReset, #btnTimeIncrease, #btnTimeDecrease, #btnStart {
-    margin-top: 25px;
+    margin-top: 45px;
 }
 
 #btn1, #btn2, #btn3 {
@@ -111,7 +111,7 @@ button {
 }
 
 #buttonContainerTop button {
-    margin: 25px 7px;
+    margin: 45px 7px;
 }
 
 button:active {
