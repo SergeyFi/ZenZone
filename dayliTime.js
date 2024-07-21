@@ -22,7 +22,7 @@ export class DayliTime {
     }
 
     getDayTime() {
-        return Math.min(this._timeEnd - Date.now(), this._timeEnd - this._timeStart);
+        return Math.max((Math.min(this._timeEnd - Date.now(), this._timeEnd - this._timeStart)), 0);
     }
 
     _clearData() {
