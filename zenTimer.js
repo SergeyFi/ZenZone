@@ -56,6 +56,9 @@ export class ZenTimer {
     }
     _onUpdate() {
         if (this._getState() != states.pause) {
+            if (this.getCurrentTime() < 0) {
+                this.reset();
+            }
             let time = millisToString(this.getCurrentTime());
             this._timerDisplay.innerText = time.minutes + ':' + time.seconds;
         }
