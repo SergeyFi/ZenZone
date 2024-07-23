@@ -17,3 +17,9 @@ const app = Object.freeze({
         chill: 'chill'
     }
 });
+
+function setIfNotExist(key, data) {
+    if (!localStorage.getItem(key)) {
+        localStorage.setItem(key, data);
+    }
+}

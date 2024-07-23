@@ -3,7 +3,7 @@ export class App {
         this._observers = [];
     }
     getState() {
-        return localStorage.getItem('appState')??app.work;
+        return localStorage.getItem('appState')??app.states.work;
     }
     setState(state) {
         this._state = state;

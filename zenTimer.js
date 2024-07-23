@@ -1,5 +1,4 @@
 const states = Object.freeze({ none: 'none', work: 'work', pause: 'pause' });
-// timer events
 
 export class ZenTimer {
     constructor() {
@@ -8,7 +7,6 @@ export class ZenTimer {
         this._btnReset = document.getElementById('btnReset');
         this._bindToButton(this._btnReset, this._onReset.bind(this));
         this._timerDisplay = document.getElementById("timerDisplay");
-        this._timeLimits = Object.freeze({ min: 1 * 60 * 1000, max: 99 * 60 * 1000 });
         this._observers = [];
         this._onUpdate();
         this._startAutoUpdate();
@@ -80,7 +78,13 @@ export class ZenTimer {
     }
 
     _getDefaultTime() {
-        return localStorage.getItem('timerDefaultTime')??25*60*1000;
+        let defaultTime = localStorage.getItem('timerDefaultTime');
+        if (defaultTime) {
+            return parseInt(defaultTime);
+        }
+        else {
+            return 0;
+        }
     }
     _startAutoUpdate() {
         this._updateTimer = setInterval(this._onUpdate.bind(this), 1000);
