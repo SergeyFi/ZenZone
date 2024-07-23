@@ -6,6 +6,7 @@ const timeWorkText = document.getElementById("timeWork");
 let dt = new DayliTime(12, 24, 6);
 
 document.addEventListener('DOMContentLoaded', function() {
+    update();
     setInterval(update, 1000);
 });
 
