@@ -3,22 +3,23 @@ const btnBreak= document.getElementById('btnBreak');
 const btnChill = document.getElementById('btnChill');
 
 btnWork.addEventListener('click', function () {
-    app.manager.setState(app.states.work);
+    window.app.self.setState(app.states.work);
+    window.app.timer.setDefaultTime();
     select(btnWork);
 });
 
 btnBreak.addEventListener('click', function () {
-    app.manager.setState(app.states.break);
+    window.app.self.setState(app.states.break);
     select(btnBreak);
 });
 
 btnChill.addEventListener('click', function () {
-    app.manager.setState(app.states.chill);
+    window.app.self.setState(app.states.chill);
     select(btnChill);
 });
 
 document.addEventListener('DOMContentLoaded', function () {
-    let state = app.manager.getState();
+    let state = window.app.self.getState();
     switch (state) {
         case app.states.work:
             select(btnWork);

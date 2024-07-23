@@ -1,4 +1,5 @@
 const states = Object.freeze({ none: 'none', work: 'work', pause: 'pause' });
+// timer events
 
 export class ZenTimer {
     constructor() {
@@ -8,6 +9,7 @@ export class ZenTimer {
         this._bindToButton(this._btnReset, this._onReset.bind(this));
         this._timerDisplay = document.getElementById("timerDisplay");
         this._timeLimits = Object.freeze({ min: 1 * 60 * 1000, max: 99 * 60 * 1000 });
+        this._observers = [];
         this._onUpdate();
         this._startAutoUpdate();
     }
@@ -30,17 +32,20 @@ export class ZenTimer {
         this._setState(states.work);
         this._btnStart.innerText = 'pause';
         localStorage.setItem('timerEndTime', this._getDefaultTime() + Date.now());
+        this._callObservers({type: 'onStart'});
     }
     _onPause() {
         this._setState(states.pause);
         localStorage.setItem('timerPauseTime', Date.now());
         this._btnStart.innerText = 'start';
+        this._callObservers({type: 'onPause'});
     }
     _onResume() {
         this._setState(states.work);
         this._btnStart.innerText = 'pause';
         localStorage.setItem('timerEndTime', parseInt(localStorage.getItem('timerEndTime')) + 
         Date.now() - parseInt(localStorage.getItem('timerPauseTime')));
+        this._callObservers({type: 'onResume'});
     }
     _onReset() {
         this._setState(states.none);
@@ -49,6 +54,7 @@ export class ZenTimer {
         localStorage.removeItem('timerPauseTime');
         this._btnStart.innerText = 'start';
         this._onUpdate();
+        this._callObservers({type: 'onReset'});
     }
     _onUpdate() {
         if (this._getState() != states.pause) {
@@ -74,12 +80,29 @@ export class ZenTimer {
     }
 
     _getDefaultTime() {
-        return 25*60*1000;
+        return localStorage.getItem('timerDefaultTime')??25*60*1000;
     }
     _startAutoUpdate() {
         this._updateTimer = setInterval(this._onUpdate.bind(this), 1000);
     }
     _stopAutoUpdate() {
         clearInterval(this._updateTimer);
+    }
+    addEventListener(callback) {
+        this._observers.push(callback);
+    }
+    _callObservers(event) {
+        this._observers.forEach(callback => {
+            callback(event);
+        });
+    }
+
+    reset() {
+        this._onReset();
+    }
+
+    setDefaultTime(time) {
+        localStorage.setItem('timerDefaultTime', time);
+        this.reset();
     }
 }

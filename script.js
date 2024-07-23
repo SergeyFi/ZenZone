@@ -1,3 +1,5 @@
+import { ZenTimer } from "./zenTimer.js";
+
 const btnStart = document.getElementById('btnStart');
 const btnReset = document.getElementById('btnReset');
 const btnTimeIncrease = document.getElementById('btnTimeIncrease');
@@ -8,21 +10,6 @@ const sourceTime = 25 * 60 * 1000;
 const timeLimits = {min: 1 * 60 * 1000, max: 99 * 60 * 1000};
 let timer;
 
-btnStart.addEventListener('click', function () {
-    let state = getState();
-    if (state == states.none) {
-        onStart();
-    } else if (state == states.work) {
-        onPause();
-    } else if (state == states.pause) {
-        onResume();
-    }
-});
-
-btnReset.addEventListener('click', function () {
-    reset();
-});
-
 btnTimeIncrease.addEventListener('click', function () {
     shiftDefaultTime(1000 * 60);
 });
@@ -32,55 +19,53 @@ btnTimeDecrease.addEventListener('click', function () {
 });
 
 document.addEventListener('DOMContentLoaded', function() {
-    setupDefaultProperties();
-    updateTimerDisplay(getCurrentTime());
-    tryGetNotifyPermission();
+    
 });
 
 function onStart() {
-    setState(states.work);
-    localStorage.setItem(props.startTime, Date.now());
-    localStorage.setItem(props.endTime, getDefaultTime() + Date.now());
-    timer = setInterval(onUpdate, 1000);
-    btnStart.innerText = 'pause';
-    requestNotify(getCurrentTime());
+    // setState(states.work);
+    // localStorage.setItem(props.startTime, Date.now());
+    // localStorage.setItem(props.endTime, getDefaultTime() + Date.now());
+    // timer = setInterval(onUpdate, 1000);
+    // btnStart.innerText = 'pause';
+    // requestNotify(getCurrentTime());
 }
 
 function onUpdate() {
-    let currentTime = getCurrentTime();
-    if (currentTime <= 0) {
-        reset();
-    }
-    updateTimerDisplay(getCurrentTime());
+    // let currentTime = getCurrentTime();
+    // if (currentTime <= 0) {
+    //     reset();
+    // }
+    // updateTimerDisplay(getCurrentTime());
 }
 
 function onPause() {
-    setState(states.pause);
-    clearInterval(timer);
-    localStorage.setItem(props.pauseTime, Date.now());
-    btnStart.innerText = 'start';
-    requestCancelNotify();
+    // setState(states.pause);
+    // clearInterval(timer);
+    // localStorage.setItem(props.pauseTime, Date.now());
+    // btnStart.innerText = 'start';
+    // requestCancelNotify();
 }
 
 function onResume() {
-    setState(states.work);
-    let pauseTime = parseInt(localStorage.getItem(props.pauseTime));
-    let targetTime = parseInt(localStorage.getItem(props.endTime));
-    localStorage.setItem(props.endTime, targetTime + Date.now() - pauseTime);
-    timer = setInterval(onUpdate, 1000);
-    btnStart.innerText = 'pause';
-    requestNotify(getCurrentTime());
+    // setState(states.work);
+    // let pauseTime = parseInt(localStorage.getItem(props.pauseTime));
+    // let targetTime = parseInt(localStorage.getItem(props.endTime));
+    // localStorage.setItem(props.endTime, targetTime + Date.now() - pauseTime);
+    // timer = setInterval(onUpdate, 1000);
+    // btnStart.innerText = 'pause';
+    // requestNotify(getCurrentTime());
 }
 
 function reset() {
-    if (timer) clearInterval(timer);
-    setState(states.none);
-    localStorage.removeItem(props.startTime);
-    localStorage.removeItem(props.endTime);
-    localStorage.removeItem(props.pauseTime);
-    updateTimerDisplay(getCurrentTime());
-    requestCancelNotify();
-    btnStart.innerText = 'start';
+    // if (timer) clearInterval(timer);
+    // setState(states.none);
+    // localStorage.removeItem(props.startTime);
+    // localStorage.removeItem(props.endTime);
+    // localStorage.removeItem(props.pauseTime);
+    // updateTimerDisplay(getCurrentTime());
+    // requestCancelNotify();
+    // btnStart.innerText = 'start';
 }
 
 function setState(state) {
@@ -140,21 +125,3 @@ function getCurrentTime() {
         return targetTime - pauseTime;
     }
 }
-
-function tryGetNotifyPermission() {
-    if (Notification.permission === 'default') {
-        Notification.requestPermission();
-    }
-}
-
-function requestNotify(time) {
-    navigator.serviceWorker.controller.postMessage({ action: 'notify', value: time });
-}
-
-function requestCancelNotify() {
-    navigator.serviceWorker.controller.postMessage({ action: 'cancelNotify' });
-}
-
-app.manager.addEventListener('state', function (data) {
-    updateTimerDisplay(getCurrentTime());
-});

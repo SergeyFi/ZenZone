@@ -9,3 +9,11 @@ function millisToString(millis) {
 
     return {hours: hours, minutes: minutes, seconds: seconds};
 }
+
+const app = Object.freeze({
+    states: {
+        work: 'work',
+        break: 'break',
+        chill: 'chill'
+    }
+});
