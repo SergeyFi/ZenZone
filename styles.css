@@ -24,9 +24,10 @@ body {
 #timeWork, #timeDayContainer, #timerDisplay {
     color: white;
     font-family: "Space Grotesk", sans-serif;
-    font-weight: bold;
+    font-weight: 600;
     font-variant-numeric: tabular-nums;
     user-select: none;
+    letter-spacing: -0.15rem;
     font-size: 70px;
     display: flex;
     align-items: center;
@@ -86,7 +87,7 @@ body {
     width: 115px;
     outline: none;
     font-family: "Space Grotesk", sans-serif;
-    font-weight: bold;
+    font-weight: 600;
     font-size: 25px;
 }
 
