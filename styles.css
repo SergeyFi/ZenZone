@@ -3,98 +3,140 @@
     src: url('./SpaceGrotesk.woff2') format('woff2');
 }
 
-body,
-html {
-    font-family: 'Space Grotesk', sans-serif;
+body {
     margin: 0;
     padding: 0;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
     overflow: hidden;
-}
-
-.container {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-}
-
-.background-image {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
     background-image: url('https://studywithme.io/aesthetic-pomodoro-timer/3ce5f595f1a64dc1c1ee.jpg');
     background-size: cover;
-    background-position: center;
-    opacity: 1.0;
 }
 
-.center-box {
-    position: absolute;
-    top: 45%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    text-align: center;
+#timerContainer {
+    display: flex; /* превращаем контейнер в flex-контейнер */
+    align-items: center;
+}
+
+#timeWork, #timeDayContainer, #timerDisplay {
     color: white;
-}
-
-.center-box p {
-    font-size: 125px;
     font-family: "Space Grotesk", sans-serif;
     font-weight: bold;
     font-variant-numeric: tabular-nums;
-    margin-bottom: 1vh;
-    text-align: center;
-    justify-content: center;
     user-select: none;
+    font-size: 70px;
+    display: flex;
+    align-items: center;
 }
 
-button {
-    background-color: white;
-    color: black;
-    font-family: "Space Grotesk", sans-serif;
-    font-weight: bold;
+#timeWork {
+    margin-right: 20px; /* увеличьте или уменьшите значение маржины по вашему усмотрению */
+    margin-left: 55px;
+}
+
+#timeDayContainer {
+    display: flex;
+    align-items: center;
+    margin-left: 525px; /* увеличьте или уменьшите значение маржины по вашему усмотрению */
+}
+
+#timeDay, #timeWork, #timeDaySeconds {
+    opacity: 0.7;
+}
+
+#timeDaySeconds {
+    margin-left: 8px; /* увеличьте или уменьшите значение маржины по вашему усмотрению */
+    font-size: 35px;
+    margin-top: 20px;
+}
+
+#timerDisplay {
+    font-size: 125px;
+    margin: 10px;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+#buttonContainer {
+    display: flex;
+    justify-content: center;
+}
+
+#btnReset, #btnTimeIncrease, #btnTimeDecrease {
+    border: none;
+    background-color: transparent; /* делаем фон прозрачным */
+}
+#buttonContainer img {
+    width: 40px; /* задаем ширину изображения */
+    height: 40px; /* задаем высоту изображения */
+    background-color: transparent; /* делаем фон прозрачным */
+}
+
+#btnStart {
+    margin: 0 10px;
+}
+
+#btnWork, #btnBreak, #btnChill, #btnStart {
     border-radius: 25px;
     height: 45px;
-    line-height: 40px;
-    min-width: 120px;
-    text-align: center;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    border: none;
+    width: 115px;
+    outline: none;
+    font-family: "Space Grotesk", sans-serif;
+    font-weight: bold;
     font-size: 25px;
-    transition: opacity 0.3s ease;
-    cursor: pointer;
-    margin-right: 10px;
+}
+
+#btnReset, #btnTimeIncrease, #btnTimeDecrease, #btnStart {
+    margin-top: 45px;
+}
+
+#btnWork, #btnBreak, #btnChill {
+    height: 35px;
+    width: 96px;
+    font-size: 20px;
 }
 
 button:hover {
     opacity: 0.7;
 }
 
-#btnReset {
-    background-image: url('icon_refresh.svg');
+button {
+    transition: opacity 0.3s ease;
+    cursor: pointer;
 }
 
-.button-icon {
-    background-color: initial;
-    background-size: 40px 40px;
-    background-repeat: no-repeat;
-    padding: 17px;
-    min-width: initial;
-    border-radius: initial;
-    width: 40px;
-    height: 45px;
+#buttonContainerTop button {
+    margin: 45px 7px;
 }
 
-#btnTimeIncrease {
-    background-image: url('icon_sign_plus.svg');
+button:active {
+    background-color: #d0d0d0;
 }
 
-#btnTimeDecrease {
-    background-image: url('icon_sign_minus.svg');
+button:active img {
+    filter: brightness(0.9);
 }
+
+#btnReset img {
+    transition: transform 0.3s ease;
+}
+
+#btnReset:active img {
+    transform: rotate(360deg);
+}
+
+button.select {
+    border: none;
+    color: black;
+}
+
+button.unselect {
+    background-color: rgba(255, 255, 255, 0.119);
+    border: 1px solid white;
+    color: white;
+}
+
