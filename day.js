@@ -22,6 +22,7 @@ function setDayTimerText() {
   }
 
   function setTimeWorkText() {
-    let timeWorkStr = millisToString(dt.getWorkTime());
+    let time = dt.getWorkTime() - window.app.timer.getPassedTime();
+    let timeWorkStr = millisToString(time);
     timeWorkText.innerText = timeWorkStr.hours + ":" + timeWorkStr.minutes;
 }

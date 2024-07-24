@@ -5,20 +5,18 @@ export class DayliTime {
         localStorage.setItem('dayStart', this._timeStart);
         this._timeEnd = new Date().setHours(dayEndHour, 0, 0, 0);
         localStorage.setItem('dayEnd', this._timeEnd);
-        let workTimeSaved = localStorage.getItem('workTime');
-        this._workTime = workTimeSaved? workTimeSaved : (workHours * 60 * 60 * 1000);
+        this._workHours = workHours;
+        localStorage.getItem('workTime')?undefined:localStorage.setItem('workTime', workHours*60*60*1000);
     }
 
     removeWorkTime(time) {
-        this._workTime = Math.max(this._workTime - time, 0);
-        if (this._workTime < 0) {
-            this._workTime = 0;
-        }
-        localStorage.setItem('workTime', this._workTime);
+        let workTime = parseInt(localStorage.getItem('workTime'));
+        workTime = Math.max(workTime - time, 0);
+        localStorage.setItem('workTime', workTime);
     }
 
     getWorkTime() {
-        return this._workTime;
+        return localStorage.getItem('workTime');
     }
 
     getDayTime() {

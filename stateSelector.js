@@ -38,7 +38,9 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     setupDefaultTime();
-    setDefaultTimeInTimer();
+    if (window.app.timer.getDefaultTime() != localStorage.getItem('defauiltTime' + window.app.self.getState())){
+        setDefaultTimeInTimer();
+    }
 });
 
 function select(btn) {

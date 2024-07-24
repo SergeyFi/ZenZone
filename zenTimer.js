@@ -11,6 +11,9 @@ export class ZenTimer {
         this._onUpdate();
         this._startAutoUpdate();
     }
+    addEventListener(callback) {
+        this._observers.push(callback);
+    }
     getCurrentTime() {
         if (this._getState() == states.work) {
             return parseInt(localStorage.getItem('timerEndTime')) - Date.now();
@@ -19,40 +22,58 @@ export class ZenTimer {
             let timeEnd = parseInt(localStorage.getItem('timerEndTime'));
             return timeEnd - timePause;
         } else {
-            return this._getDefaultTime();
+            return this.getDefaultTime();
         }
     }
-
+    getDefaultTime() {
+        let defaultTime = localStorage.getItem('timerDefaultTime');
+        if (defaultTime) {
+            return parseInt(defaultTime);
+        }
+        else {
+            return 0;
+        }
+    }
+    setDefaultTime(time) {
+        localStorage.setItem('timerDefaultTime', time);
+        this.reset();
+    }
+    getPassedTime() {
+        return this.getDefaultTime() - this.getCurrentTime();
+    }
+    reset() {
+        this._onReset();
+    }
     _bindToButton(btn, callback) {
         btn.addEventListener('click', callback);
     }
     _onStart() {
         this._setState(states.work);
         this._btnStart.innerText = 'pause';
-        localStorage.setItem('timerEndTime', this._getDefaultTime() + Date.now());
-        this._callObservers({type: 'onStart'});
+        localStorage.setItem('timerEndTime', this.getDefaultTime() + Date.now());
+        this._callObservers({ type: 'onStart' });
     }
     _onPause() {
         this._setState(states.pause);
         localStorage.setItem('timerPauseTime', Date.now());
         this._btnStart.innerText = 'start';
-        this._callObservers({type: 'onPause'});
+        this._callObservers({ type: 'onPause' });
     }
     _onResume() {
         this._setState(states.work);
         this._btnStart.innerText = 'pause';
-        localStorage.setItem('timerEndTime', parseInt(localStorage.getItem('timerEndTime')) + 
-        Date.now() - parseInt(localStorage.getItem('timerPauseTime')));
-        this._callObservers({type: 'onResume'});
+        localStorage.setItem('timerEndTime', parseInt(localStorage.getItem('timerEndTime')) +
+            Date.now() - parseInt(localStorage.getItem('timerPauseTime')));
+        this._callObservers({ type: 'onResume' });
     }
     _onReset() {
+        this._callObservers({ type: 'onReset' });
         this._setState(states.none);
         localStorage.removeItem('timerCurrentTime');
         localStorage.removeItem('timerEndTime');
         localStorage.removeItem('timerPauseTime');
         this._btnStart.innerText = 'start';
         this._onUpdate();
-        this._callObservers({type: 'onReset'});
     }
     _onUpdate() {
         if (this._getState() != states.pause) {
@@ -74,20 +95,10 @@ export class ZenTimer {
         }
     }
     _getState() {
-        return localStorage.getItem('timerState')??states.none;
+        return localStorage.getItem('timerState') ?? states.none;
     }
     _setState(state) {
         localStorage.setItem('timerState', state);
-    }
-
-    _getDefaultTime() {
-        let defaultTime = localStorage.getItem('timerDefaultTime');
-        if (defaultTime) {
-            return parseInt(defaultTime);
-        }
-        else {
-            return 0;
-        }
     }
     _startAutoUpdate() {
         this._updateTimer = setInterval(this._onUpdate.bind(this), 1000);
@@ -95,21 +106,9 @@ export class ZenTimer {
     _stopAutoUpdate() {
         clearInterval(this._updateTimer);
     }
-    addEventListener(callback) {
-        this._observers.push(callback);
-    }
     _callObservers(event) {
         this._observers.forEach(callback => {
             callback(event);
         });
-    }
-
-    reset() {
-        this._onReset();
-    }
-
-    setDefaultTime(time) {
-        localStorage.setItem('timerDefaultTime', time);
-        this.reset();
     }
 }
