@@ -16,7 +16,8 @@ export class ZenTimer {
     }
     getCurrentTime() {
         if (this._getState() == states.work) {
-            return parseInt(localStorage.getItem('timerEndTime')) - Date.now();
+            let currentTime = parseInt(localStorage.getItem('timerEndTime')) - Date.now();
+            return Math.max(currentTime, 0);
         } else if (this._getState() == states.pause) {
             let timePause = parseInt(localStorage.getItem('timerPauseTime'));
             let timeEnd = parseInt(localStorage.getItem('timerEndTime'));
@@ -73,16 +74,19 @@ export class ZenTimer {
         localStorage.removeItem('timerEndTime');
         localStorage.removeItem('timerPauseTime');
         this._btnStart.innerText = 'start';
-        this._onUpdate();
+        this._updateTimeDisplay();
     }
     _onUpdate() {
-        if (this._getState() != states.pause) {
-            if (this.getCurrentTime() < 0) {
+        if (this._getState() == states.work) {
+            if (this.getCurrentTime() == 0) {
                 this.reset();
-            }
-            let time = millisToString(this.getCurrentTime());
-            this._timerDisplay.innerText = time.minutes + ':' + time.seconds;
+            }  
         }
+        this._updateTimeDisplay();
+    }
+    _updateTimeDisplay() {
+        let time = millisToString(this.getCurrentTime());
+        this._timerDisplay.innerText = time.minutes + ':' + time.seconds;
     }
 
     _timerModeSelection() {
