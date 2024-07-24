@@ -23,6 +23,12 @@ function setDayTimerText() {
 
   function setTimeWorkText() {
     let time = dt.getWorkTime() - window.app.timer.getPassedTime();
-    let timeWorkStr = millisToString(time);
-    timeWorkText.innerText = timeWorkStr.hours + ":" + timeWorkStr.minutes;
+    let timeWorkStr = millisToString(Math.max(time, 0));
+    timeWorkText.innerText = timeWorkStr.hours + ':' + timeWorkStr.minutes;
 }
+
+window.app.timer.addEventListener((event)=>{
+    if (event.type == 'onReset' && (event.state == 'work' || event.state == 'pause')) {
+        dt.removeWorkTime(window.app.timer.getPassedTime());
+    }
+});

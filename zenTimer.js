@@ -68,7 +68,7 @@ export class ZenTimer {
         this._callObservers({ type: 'onResume' });
     }
     _onReset() {
-        this._callObservers({ type: 'onReset' });
+        this._callObservers({ type: 'onReset', state: this._getState()});
         this._setState(states.none);
         localStorage.removeItem('timerCurrentTime');
         localStorage.removeItem('timerEndTime');
