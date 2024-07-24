@@ -22,12 +22,17 @@ function setDayTimerText() {
   }
 
   function setTimeWorkText() {
-    let time = dt.getWorkTime() - window.app.timer.getPassedTime();
+    let time = dt.getWorkTime();
+    if (window.app.self.getState() == app.states.work) {
+        time -= window.app.timer.getPassedTime();
+    }
+    
     let timeWorkStr = millisToString(Math.max(time, 0));
     timeWorkText.innerText = timeWorkStr.hours + ':' + timeWorkStr.minutes;
 }
 
 window.app.timer.addEventListener((event)=>{
+    if (window.app.self.getState() != app.states.work) return;
     if (event.type == 'onReset' && (event.state == 'work' || event.state == 'pause')) {
         dt.removeWorkTime(window.app.timer.getPassedTime());
     }
