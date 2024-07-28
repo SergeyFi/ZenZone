@@ -1,38 +1,48 @@
 export class DayliTime {
     constructor(dayStartHour, dayEndHour, workHours) {
-        this._timeStart = new Date().setHours(dayStartHour, 0, 0, 0);
-        this._clearOutdatedData(this._timeStart);
-        localStorage.setItem('dayStart', this._timeStart);
-        this._timeEnd = new Date().setHours(dayEndHour, 0, 0, 0);
-        localStorage.setItem('dayEnd', this._timeEnd);
+        this._startHour = dayStartHour;
+        this._endHour = dayEndHour;
         this._workHours = workHours;
-        localStorage.getItem('workTime')?undefined:localStorage.setItem('workTime', workHours*60*60*1000);
+        this._setDayTime();
+        if (!localStorage.getItem('workTimeCurrent')) localStorage.setItem('workTimeCurrent', workHours * 60 * 60 * 1000);
+        setInterval(this._onUpdate.bind(this), 1000);
     }
 
     removeWorkTime(time) {
-        let workTime = parseInt(localStorage.getItem('workTime'));
+        let workTime = parseInt(localStorage.getItem('workTimeCurrent'));
         workTime = Math.max(workTime - time, 0);
-        localStorage.setItem('workTime', workTime);
+        localStorage.setItem('workTimeCurrent', workTime);
     }
 
     getWorkTime() {
-        return localStorage.getItem('workTime');
+        return localStorage.getItem('workTimeCurrent');
     }
 
     getDayTime() {
-        return Math.max((Math.min(this._timeEnd - Date.now(), this._timeEnd - this._timeStart)), 0);
+        let time = Math.max((Math.min(this._timeEnd - Date.now(), this._timeEnd - this._timeStart)), 0);
+        return time;
     }
 
-    _clearData() {
-        localStorage.removeItem('dayStart');
-        localStorage.removeItem('dayEnd');
-        localStorage.removeItem('workTime');
-    }
-
-    _clearOutdatedData(dayStart) {
-        let dayStartPrev = parseInt(localStorage.getItem('dayStart'));
-        if (dayStartPrev && dayStart > dayStartPrev) {
-            this._clearData();
+    _isDayEnd() {
+        if (this._timeEnd < Date.now()) {
+            return true;
         }
+        return false;
+    }
+
+    _startNewDay() {
+        localStorage.setItem('workTimeCurrent', this._workHours * 60 * 60 * 1000);
+        this._setDayTime();
+    }
+
+    _onUpdate() {
+        if (this._isDayEnd()) {
+            this._startNewDay();
+        }
+    }
+
+    _setDayTime() {
+        this._timeStart = new Date().setHours(this._startHour, 0, 0, 0);
+        this._timeEnd = new Date().setHours(this._endHour, 0, 0, 0);
     }
 }
